@@ -1,8 +1,6 @@
 // assets/js/youtube.js
-const API_KEY = "AIzaSyCQIhMliRh0d2AnpBFYZoYFiaddoVETfZQ";
 
 function iso8601DurationToSeconds(d) {
-  // PT#H#M#S parsing
   const m = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(d);
   if (!m) return 0;
   const h = parseInt(m[1] || "0", 10);
@@ -18,29 +16,31 @@ export function formatDuration(sec) {
   return `${mm}:${ss}`;
 }
 
+/**
+ * Client-side YouTube search
+ * IMPORTANT:
+ * - No API key here
+ * - Calls our server proxy
+ */
 export async function searchYouTube(query, maxResults = 12) {
-  const q = encodeURIComponent(query);
-  const searchUrl =
-    `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=${maxResults}&q=${q}&key=${API_KEY}`;
+  const url = `/api/youtube/search?q=${encodeURIComponent(query)}&max=${maxResults}`;
 
-  const searchRes = await fetch(searchUrl);
-  if (!searchRes.ok) throw new Error("YouTube search failed");
-  const searchJson = await searchRes.json();
+  const res = await fetch(url, {
+    credentials: "include" // keep cookies consistent
+  });
 
-  const videoIds = searchJson.items.map(it => it.id.videoId).filter(Boolean);
-  if (videoIds.length === 0) return [];
+  if (!res.ok) {
+    throw new Error("YouTube search failed");
+  }
 
-  const detailsUrl =
-    `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics,snippet&id=${videoIds.join(",")}&key=${API_KEY}`;
-  const detailsRes = await fetch(detailsUrl);
-  if (!detailsRes.ok) throw new Error("YouTube details failed");
-  const detailsJson = await detailsRes.json();
+  const raw = await res.json();
 
-  return detailsJson.items.map(v => ({
-    videoId: v.id,
-    title: v.snippet.title,
-    thumbnailUrl: v.snippet.thumbnails?.medium?.url || v.snippet.thumbnails?.default?.url || "",
-    durationSec: iso8601DurationToSeconds(v.contentDetails.duration),
-    views: Number(v.statistics.viewCount || 0),
+  // Server returns ISO 8601 durations, normalize here to seconds
+  return raw.map(v => ({
+    videoId: v.videoId,
+    title: v.title,
+    thumbnailUrl: v.thumbnailUrl,
+    durationSec: iso8601DurationToSeconds(v.duration),
+    views: Number(v.views || 0)
   }));
 }

@@ -10,6 +10,12 @@ import { hashPassword, createSession, deleteSession, requireAuth } from "./lib/a
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const YT_KEY = process.env.YOUTUBE_API_KEY;
+if (!YT_KEY) {
+  console.warn("WARNING: YOUTUBE_API_KEY is not set");
+}
+
+
 // If you serve client from a different origin during dev, keep CORS enabled.
 // If client and server are same origin, you can remove cors() entirely.
 app.use(
@@ -134,6 +140,42 @@ app.get("/api/playlists", requireAuth, async (req, res) => {
   const all = await loadPlaylists();
   const mine = all.filter(p => p.username === req.auth.username);
   return res.json({ ok: true, playlists: mine });
+});
+// server.js (add route)
+app.get("/api/youtube/search", async (req, res) => {
+  const q = req.query.q;
+  if (!q) return res.status(400).json({ error: "Missing query" });
+
+  try {
+    const searchUrl =
+      `https://www.googleapis.com/youtube/v3/search?` +
+      `part=snippet&type=video&maxResults=12&q=${encodeURIComponent(q)}&key=${YT_KEY}`;
+
+    const r1 = await fetch(searchUrl);
+    const j1 = await r1.json();
+
+    const ids = j1.items.map(i => i.id.videoId).filter(Boolean);
+    if (ids.length === 0) return res.json([]);
+
+    const detailsUrl =
+      `https://www.googleapis.com/youtube/v3/videos?` +
+      `part=contentDetails,statistics,snippet&id=${ids.join(",")}&key=${YT_KEY}`;
+
+    const r2 = await fetch(detailsUrl);
+    const j2 = await r2.json();
+
+    const result = j2.items.map(v => ({
+      videoId: v.id,
+      title: v.snippet.title,
+      thumbnailUrl: v.snippet.thumbnails.medium.url,
+      duration: v.contentDetails.duration,
+      views: v.statistics.viewCount
+    }));
+
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: "YouTube request failed" });
+  }
 });
 
 // Create playlist
