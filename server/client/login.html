@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Login</h1>
+
+    <form id="loginForm" class="card form">
+      <label>Username <input name="username" required /></label>
+      <label>Password <input name="password" type="password" required /></label>
+
+      <div id="loginError" class="error" aria-live="polite"></div>
+
+      <div class="row">
+        <button class="btn" type="submit">Login</button>
+        <a class="btn btn--ghost" href="register.html">Register</a>
+      </div>
+    </form>
+  </main>
+
+  <script type="module">
+    import { loginUser } from "./assets/js/auth.js";
+
+    const form = document.getElementById("loginForm");
+    const err = document.getElementById("loginError");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      err.textContent = "";
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      const res = await loginUser(data.username, data.password);
+      if (!res.ok) {
+        err.textContent = res.error;
+        return;
+      }
+      window.location.href = "search.html";
+    });
+  </script>
+</body>
+</html>

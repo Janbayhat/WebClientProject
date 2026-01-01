@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Playlists</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__left">
+      <a href="search.html" class="navlink">Search</a>
+      <a href="playlists.html" class="brand">Playlists</a>
+    </div>
+    <div id="userHeader"></div>
+  </header>
+
+  <main class="container">
+    <div class="layout">
+      <aside class="sidebar card">
+        <h2>הספרייה שלי.</h2>
+        <button id="newPlaylistBtn" class="btn" type="button">+ פלייליסט חדש</button>
+        <div id="plList" class="sidebar__list"></div>
+      </aside>
+
+      <section class="content">
+        <div class="card row">
+          <input id="filterInput" placeholder="Filter inside playlist..." />
+          <select id="sortMode">
+            <option value="alpha">Sort A-Z</option>
+            <option value="rating">Sort by rating</option>
+          </select>
+        </div>
+
+        <div id="mainContent"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Create playlist modal -->
+  <div id="newPlaylistModal" class="modal" aria-hidden="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__panel">
+      <div class="modal__header">
+        <div class="modal__title">Create playlist</div>
+      </div>
+      <div class="modal__body form">
+        <label>Name <input id="newPlaylistName" /></label>
+      </div>
+      <div class="modal__footer row">
+        <button id="newPlaylistCreate" class="btn" type="button">Create</button>
+        <button id="newPlaylistCancel" class="btn btn--ghost" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/playlists.js"></script>
+</body>
+</html>

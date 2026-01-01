@@ -1,0 +1,14 @@
+[
+  {
+    "username": "janbay",
+    "passwordHash": "b39cd4381fc1cfd551915add5a995a8719afd553521ab2e28197b3dc79f95c2c",
+    "firstName": "Janbay",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/63/BIRD.jpg"
+  },
+  {
+    "username": "janbay2",
+    "passwordHash": "b39cd4381fc1cfd551915add5a995a8719afd553521ab2e28197b3dc79f95c2c",
+    "firstName": "Janbay",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/63/BIRD.jpg"
+  }
+]

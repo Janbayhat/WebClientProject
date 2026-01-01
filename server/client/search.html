@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Search</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__left">
+      <a href="search.html" class="brand">Search</a>
+      <a href="playlists.html" class="navlink">Playlists</a>
+    </div>
+    <div id="userHeader"></div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 id="status">Welcome</h2>
+      <form id="searchForm" class="row">
+        <input id="q" name="q" placeholder="Song or artist..." />
+        <button class="btn" type="submit">Search</button>
+      </form>
+    </section>
+
+    <section id="results" class="cards-grid"></section>
+  </main>
+
+  <div id="toastHost" class="toast-host"></div>
+
+  <!-- Player modal -->
+  <div id="playerModal" class="modal" aria-hidden="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__panel">
+      <div class="modal__header">
+        <div class="modal__title">Player</div>
+        <button id="playerCloseBtn" class="btn btn--ghost" type="button">Close</button>
+      </div>
+      <div class="modal__body">
+        <iframe id="playerFrame" class="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add-to-playlist modal -->
+  <div id="addModal" class="modal" aria-hidden="true">
+    <div class="modal__backdrop"></div>
+    <div class="modal__panel">
+      <div class="modal__header">
+        <div class="modal__title">Add to playlist</div>
+      </div>
+      <div class="modal__body form">
+        <label>Existing playlist
+          <select id="plSelect"></select>
+        </label>
+        <div class="divider">or</div>
+        <label>Create new playlist
+          <input id="newPlName" placeholder="New playlist name" />
+        </label>
+      </div>
+      <div class="modal__footer row">
+        <button id="addConfirmBtn" class="btn" type="button">Save</button>
+        <button id="addCancelBtn" class="btn btn--ghost" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/search.js"></script>
+</body>
+</html>
